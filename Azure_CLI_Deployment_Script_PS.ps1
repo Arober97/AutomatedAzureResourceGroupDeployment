@@ -27,6 +27,54 @@ function Create-VM ($resourceGroup, $location, $vmName) {
     }
 }
 
+# Function to start Virtual Machine
+function Start-VM ($resourceGroup, $vmName) {
+    try {
+        Log-Operation "Starting VM named $vmName in resource group $resourceGroup"
+        az vm start --resource-group $resourceGroup --name $vmName
+    }
+    catch {
+        Log-Operation "Error starting VM: $_"
+        throw
+    }
+}
+
+# Function to stop Virtual Machine
+function Stop-VM ($resourceGroup, $vmName) {
+    try {
+        Log-Operation "Stopping VM named $vmName in resource group $resourceGroup"
+        az vm stop --resource-group $resourceGroup --name $vmName
+    }
+    catch {
+        Log-Operation "Error stopping VM: $_"
+        throw
+    }
+}
+
+# Function to restart Virtual Machine
+function Restart-VM ($resourceGroup, $vmName) {
+    try {
+        Log-Operation "Restarting VM named $vmName in resource group $resourceGroup"
+        az vm restart --resource-group $resourceGroup --name $vmName
+    }
+    catch {
+        Log-Operation "Error restarting VM: $_"
+        throw
+    }
+}
+
+# Function to delete Virtual Machine
+function Delete-VM ($resourceGroup, $vmName) {
+    try {
+        Log-Operation "Deleting VM named $vmName in resource group $resourceGroup"
+        az vm delete --resource-group $resourceGroup --name $vmName --yes
+    }
+    catch {
+        Log-Operation "Error deleting VM: $_"
+        throw
+    }
+}
+
 # Function to create Storage Account
 function Create-Storage ($resourceGroup, $location, $storageAccountName) {
     try {
@@ -68,18 +116,6 @@ function Delete-ResourceGroup ($resourceGroup) {
     }
 }
 
-# Function to update resources in the Resource Group
-function Update-Resources ($resourceGroup) {
-    try {
-        Log-Operation "Updating resources in Resource Group $resourceGroup"
-        # Add your update logic here
-    }
-    catch {
-        Log-Operation "Error updating resources: $_"
-        throw
-    }
-}
-
 # Function to prompt for user input and create resources
 function Prompt-And-Create-Resources {
     $resourceGroup = Read-Host -Prompt 'Enter the Resource Group Name'
@@ -104,9 +140,21 @@ function Prompt-And-Create-Resources {
 function Main {
     try {
         az login
-        Prompt-And-Create-Resources
-        # Uncomment the following line if you want to update the resources
-        # Update-Resources $resourceGroup
+        $action = Read-Host -Prompt 'Do you want to (c)reate or (u)pdate resources?'
+        switch ($action) {
+            'c' { Prompt-And-Create-Resources }
+            'u' {
+                $resourceGroup = Read-Host -Prompt 'Enter the Resource Group Name'
+                $vmName = Read-Host -Prompt 'Enter the VM Name'
+                $vmAction = Read-Host -Prompt 'Do you want to (s)tart, sto(p), (r)estart, or (d)elete the VM?'
+                switch ($vmAction) {
+                    's' { Start-VM $resourceGroup $vmName }
+                    'p' { Stop-VM $resourceGroup $vmName }
+                    'r' { Restart-VM $resourceGroup $vmName }
+                    'd' { Delete-VM $resourceGroup $vmName }
+                }
+            }
+        }
         # Uncomment the following line if you want to delete the Resource Group at the end of the script
         # Delete-ResourceGroup $resourceGroup
     }
