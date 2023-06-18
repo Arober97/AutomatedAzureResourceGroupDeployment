@@ -41,7 +41,7 @@ To run the script in Azure Portal, follow these steps:
 ```
 cd clouddrive
 ```
-7. Run the script using the following command:
+7. Run the script using the following command (if running the Powershell version):
 ```
 ./Azure_CLI_Deployment_Script_PS.ps1
 ```
