@@ -24,7 +24,7 @@ To run the script in Windows 11, follow these steps:
 ```
 cd C:\Users\YourUsername\Desktop\Scripts
 ```
-4. Run the script using the following command:
+4. Run the script using the following command (if running the Powershell version):
 ```
 ./Azure_CLI_Deployment_Script_PS.ps1
 ```
